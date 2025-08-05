@@ -10,7 +10,7 @@ export default function VideoPage() {
   const router = useRouter();
   const { id } = router.query;
 
-  const [video, setVideo] = useState<any>(null);
+  const [video, setVideo] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

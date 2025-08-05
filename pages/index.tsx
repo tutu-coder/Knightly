@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-
 import { useEffect, useState, useCallback } from 'react';
 import VideoCard from '../components/VideoCard';
 import CommentsSection from '../components/CommentsSection';
