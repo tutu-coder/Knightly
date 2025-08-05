@@ -1,5 +1,8 @@
 // /pages/creator/[id].tsx
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';

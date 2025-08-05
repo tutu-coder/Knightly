@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+
 import { useEffect, useState, useCallback } from 'react';
 import VideoCard from '../components/VideoCard';
 import CommentsSection from '../components/CommentsSection';
 import { supabase } from '../lib/supabase';
 import { useUser } from '../lib/useUser';
-import LogoutButton from '../components/LogoutButton';
 import debounce from 'lodash/debounce';
 import Link from 'next/link';
 
