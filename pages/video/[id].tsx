@@ -27,11 +27,13 @@ export default function VideoPage() {
 
     const fetchVideo = async () => {
       const { data, error } = await supabase
-        .from<Video>('videos')
+        .from('videos')
         .select('*')
         .eq('id', id)
         .single();
 
+      if (!error) setVideo(data as Video);
+      
       if (error) {
         console.error('Error fetching video:', error.message);
         setLoading(false);
