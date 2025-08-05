@@ -3,15 +3,26 @@ import { supabase } from '../lib/supabase';
 import { useUser } from '../lib/useUser';
 import VideoCard from '../components/VideoCard';
 
+// ✅ Define a proper type for Video
+interface Video {
+  id: number;
+  title: string;
+  video_url: string;
+  storage_path: string;
+  user_id: string;
+}
+
 export default function ProfilePage() {
   const { user, loading } = useUser();
+
   const [username, setUsername] = useState('');
   const [bio, setBio] = useState('');
   const [loadingProfile, setLoadingProfile] = useState(true);
-  const [myVideos, setMyVideos] = useState([]);
-  const [editingTitle, setEditingTitle] = useState<{ [key: string]: boolean }>({});
-  const [newTitles, setNewTitles] = useState<{ [key: string]: string }>({});
+  const [myVideos, setMyVideos] = useState<Video[]>([]); // ✅ Properly typed
+  const [editingTitle, setEditingTitle] = useState<Record<number, boolean>>({});
+  const [newTitles, setNewTitles] = useState<Record<number, string>>({});
 
+  // ✅ Load profile info
   useEffect(() => {
     if (!user) return;
 
@@ -28,12 +39,14 @@ export default function ProfilePage() {
         setUsername(data.username);
         setBio(data.bio);
       }
+
       setLoadingProfile(false);
     };
 
     loadProfile();
   }, [user]);
 
+  // ✅ Load user's videos
   const loadMyVideos = async () => {
     if (!user) return;
 
@@ -43,13 +56,16 @@ export default function ProfilePage() {
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
 
-    if (!error && data) setMyVideos(data);
+    if (!error && data) {
+      setMyVideos(data as Video[]); // ✅ Cast as correct type
+    }
   };
 
   useEffect(() => {
     loadMyVideos();
   }, [user]);
 
+  // ✅ Save profile
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -74,26 +90,25 @@ export default function ProfilePage() {
     }
   };
 
+  // ✅ Delete video
   const handleDelete = async (videoId: number, videoPath: string) => {
     if (!confirm("Are you sure you want to delete this video?")) return;
 
-    // 1. Delete from database
     const { error: dbError } = await supabase.from("videos").delete().eq("id", videoId);
     if (dbError) {
       console.error("Failed to delete from DB:", dbError.message);
       return alert("Failed to delete video.");
     }
 
-    // 2. Delete from storage
     const { error: storageError } = await supabase.storage.from("videos").remove([videoPath]);
     if (storageError) {
       console.error("Failed to delete from storage:", storageError.message);
     }
 
-    // 3. Update UI
-    setMyVideos(myVideos.filter(v => v.id !== videoId));
+    setMyVideos(myVideos.filter((v) => v.id !== videoId));
   };
 
+  // ✅ Edit title
   const handleTitleEdit = async (videoId: number, newTitle: string) => {
     const { error } = await supabase.from("videos").update({ title: newTitle }).eq("id", videoId);
     if (error) {
@@ -101,11 +116,15 @@ export default function ProfilePage() {
       return alert("Failed to update title.");
     }
 
-    setMyVideos(myVideos.map(v => v.id === videoId ? { ...v, title: newTitle } : v));
-    setEditingTitle(prev => ({ ...prev, [videoId]: false }));
+    setMyVideos((prev) =>
+      prev.map((v) => (v.id === videoId ? { ...v, title: newTitle } : v))
+    );
+    setEditingTitle((prev) => ({ ...prev, [videoId]: false }));
   };
 
-  if (loading || loadingProfile) return <p className="text-white text-center">Loading...</p>;
+  if (loading || loadingProfile) {
+    return <p className="text-white text-center">Loading...</p>;
+  }
 
   return (
     <main className="min-h-screen bg-black text-white p-6">
@@ -138,7 +157,7 @@ export default function ProfilePage() {
         {myVideos.length === 0 ? (
           <p className="text-center text-gray-400">You have not uploaded any videos yet.</p>
         ) : (
-          myVideos.map((vid: any) => (
+          myVideos.map((vid) => (
             <div key={vid.id} className="relative">
               <VideoCard
                 videoUrl={vid.video_url}
@@ -165,7 +184,9 @@ export default function ProfilePage() {
               ) : (
                 <div className="flex gap-2 px-4 mb-4">
                   <button
-                    onClick={() => setEditingTitle((prev) => ({ ...prev, [vid.id]: true }))}
+                    onClick={() =>
+                      setEditingTitle((prev) => ({ ...prev, [vid.id]: true }))
+                    }
                     className="bg-yellow-600 px-3 py-1 rounded"
                   >
                     Edit Title
