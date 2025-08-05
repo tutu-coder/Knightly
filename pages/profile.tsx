@@ -136,7 +136,7 @@ export default function ProfilePage() {
       <h2 className="text-xl font-bold mb-4 text-center">My Uploaded Videos</h2>
       <div className="space-y-6">
         {myVideos.length === 0 ? (
-          <p className="text-center text-gray-400">You haven't uploaded any videos yet.</p>
+          <p className="text-center text-gray-400">You have not uploaded any videos yet.</p>
         ) : (
           myVideos.map((vid: any) => (
             <div key={vid.id} className="relative">
