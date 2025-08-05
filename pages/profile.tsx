@@ -160,10 +160,11 @@ export default function ProfilePage() {
         ) : (
           myVideos.map((vid) => (
             <div key={vid.id} className="relative">
+              if (!user) return <p className="text-white text-center">User not found.</p>;
               <VideoCard
                 videoUrl={vid.video_url}
                 title={vid.title}
-                creator={username || user.email}
+                creator={username || user?.email || 'Unknown'}
               />
               {editingTitle[vid.id] ? (
                 <div className="flex gap-2 px-4 mb-4">
