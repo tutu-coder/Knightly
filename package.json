@@ -11,6 +11,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.50.0",
     "just-debounce-it": "^3.2.0",
+    "lodash": "^4.17.21",
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -19,6 +20,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/lodash": "^4.17.20",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
