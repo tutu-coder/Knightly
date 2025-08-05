@@ -79,8 +79,9 @@ export default function ProfilePage() {
     };
 
     const { error } = await supabase
-      .from('profiles')
-      .upsert(updates, { onConflict: ['id'] });
+  .from('profiles')
+  .upsert([updates], { onConflict: 'id' });
+
 
     if (error) {
       alert('Failed to save profile.');
