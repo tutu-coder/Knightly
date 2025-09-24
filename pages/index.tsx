@@ -85,52 +85,72 @@ export default function HomePage() {
   if (userLoading) return <p className="text-white text-center">Loading user...</p>;
 
   return (
-    <main className="bg-black min-h-screen py-4 px-4 text-white">
-      
-      <h1 className="text-2xl font-bold text-center mb-6">Latest Animations</h1>
+    <div className="relative min-h-screen">
+      {/* 🔹 Background video */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="fixed top-0 left-0 w-full h-full object-cover -z-10"
+      >
+        <source src="/background.mp4" type="video/mp4" />
+      </video>
 
-      <div className="mb-6 max-w-md mx-auto">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={handleSearch}
-          placeholder="Search videos by title..."
-          className="w-full p-2 rounded bg-gray-800 text-white"
-        />
-      </div>
+      {/* 🔹 Dim overlay to make text readable */}
+      <div className="fixed top-0 left-0 w-full h-full bg-black/60 -z-10" />
 
-      {loading ? (
-        <p className="text-center text-gray-400">Loading videos...</p>
-      ) : videos.length === 0 ? (
-        <p className="text-center text-gray-400">No videos uploaded yet.</p>
-      ) : (
-        videos.map((video) => (
-          <div key={video.id} className="mb-10">
-            <VideoCard
-              videoUrl={video.video_url}
-              title={video.title}
-              creator={
-                <Link href={`/creator/${video.user_id}`} className="text-blue-400 hover:underline">
-                  {video.user_id}
-                </Link>
-              }
-            />
+      {/* 🔹 Main content */}
+      <main className="relative z-10 bg-transparent py-4 px-4 text-white">
+        <h1 className="text-2xl font-bold text-center mb-6">Latest Animations</h1>
 
-            <div className="text-sm text-gray-400 mt-1 mb-2">
-              💬 {commentCounts[video.id] ?? 0} comment(s)
+        <div className="mb-6 max-w-md mx-auto">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearch}
+            placeholder="Search videos by title..."
+            className="w-full p-2 rounded bg-gray-800 text-white"
+          />
+        </div>
+
+        {loading ? (
+          <p className="text-center text-gray-400">Loading videos...</p>
+        ) : videos.length === 0 ? (
+          <p className="text-center text-gray-400">No videos uploaded yet.</p>
+        ) : (
+          videos.map((video) => (
+            <div key={video.id} className="mb-10">
+              <VideoCard
+                videoUrl={video.video_url}
+                title={video.title}
+                creator={
+                  <Link href={`/creator/${video.user_id}`} className="text-blue-400 hover:underline">
+                    {video.user_id}
+                  </Link>
+                }
+                videoId={video.id}
+              />
+
+              {/* 👇 comments + toggle wrapped in same max-width as video */}
+              <div className="max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-auto">
+                <div className="text-sm text-gray-400 mt-1 mb-2">
+                  💬 {commentCounts[video.id] ?? 0} comment(s)
+                </div>
+
+                <button
+                  onClick={() => toggleComments(video.id)}
+                  className="text-blue-500 text-sm hover:underline mb-2"
+                >
+                  {showComments[video.id] ? 'Hide Comments' : 'Show Comments'}
+                </button>
+
+                {showComments[video.id] && <CommentsSection videoId={video.id} />}
+              </div>
             </div>
-
-            <button
-              onClick={() => toggleComments(video.id)}
-              className="text-blue-500 text-sm hover:underline mb-2"
-            >
-              {showComments[video.id] ? 'Hide Comments' : 'Show Comments'}
-            </button>
-
-            {showComments[video.id] && <CommentsSection videoId={video.id} />}
-          </div>
-        ))
-      )}
-    </main>
+          ))
+        )}
+      </main>
+    </div>
   );
 }
