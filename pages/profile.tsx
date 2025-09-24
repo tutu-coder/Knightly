@@ -27,7 +27,7 @@ export default function ProfilePage() {
     if (!user) return;
 
     const loadProfile = async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabase 
         .from('profiles')
         .select('username, bio')
         .eq('id', user.id)
@@ -160,7 +160,7 @@ export default function ProfilePage() {
         ) : (
           myVideos.map((vid) => (
             <div key={vid.id} className="relative">
-              if (!user) return <p className="text-white text-center">User not found.</p>;
+              
               <VideoCard
                 videoUrl={vid.video_url}
                 title={vid.title}
